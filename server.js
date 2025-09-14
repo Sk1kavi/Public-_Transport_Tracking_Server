@@ -14,6 +14,12 @@ app.use(express.json());
 app.use("/admin", require("./routes/adminRoutes"));
 app.use("/user", require("./routes/userRoutes"));
 app.use("/bus",require("./routes/busRoutes"));
+app.use((req, res) => {
+  console.log("❌ Route not found:", req.method, req.originalUrl);
+  res.status(404).json({ error: "Route not found" });
+});
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+console.log("It is printing");

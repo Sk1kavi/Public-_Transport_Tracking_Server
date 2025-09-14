@@ -27,6 +27,45 @@ exports.getBusById = async (req, res) => {
   }
 };
 
+exports.updateBusLocation = async (req, res) => {
+  try {
+    console.log("🚌 updateBusLocation route called");  // to confirm route is hit
+
+    const { busId, lat, lng, speed, timestamp } = req.body;
+    console.log("Request body:", req.body);
+
+    if (!lat || !lng) {
+      console.log("❌ Missing latitude or longitude");
+      return res.status(400).json({ error: "Latitude and longitude required" });
+    }
+
+    const bus = await Bus.findById(busId);
+    if (!bus) {
+      console.log(`❌ Bus not found for ID: ${busId}`);
+      return res.status(404).json({ error: "Bus not found" });
+    }
+
+    console.log(`✅ Found bus: ${busId}, updating location...`);
+
+    bus.location = {
+      type: "Point",
+      coordinates: [lng, lat] // GeoJSON order
+    };
+    bus.speed = speed || null;
+    bus.lastUpdated = timestamp || new Date();
+
+    await bus.save();
+
+    console.log(`✅ Bus ${busId} location updated successfully`);
+    res.json({ message: "Bus location updated", bus });
+  } catch (error) {
+    console.error("🔥 Error in updateBusLocation:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+
 function getDistance(lat1, lon1, lat2, lon2) {
   const R = 6371; // Earth radius in km
   const dLat = (lat2 - lat1) * Math.PI / 180;
