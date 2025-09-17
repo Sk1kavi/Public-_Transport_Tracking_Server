@@ -1,11 +1,30 @@
 const Bus = require("../models/Bus");
 const User = require("../models/User");
 
-// Get buses by route
+// Get buses by source and destination 
 exports.getBuses = async (req, res) => {
   try {
     const { source, destination } = req.query;
     const buses = await Bus.find({ source, destination, isActive: true });
+    res.json(buses);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+// Fetch buses by routeName (for drivers)
+exports.getBusesByRoute = async (req, res) => {
+  try {
+    const { route } = req.query;
+    if (!route) {
+      return res.status(400).json({ error: "Route is required" });
+    }
+
+    const buses = await Bus.find({ routeName: route, isActive: true });
+
+    if (buses.length === 0) {
+      return res.json({ message: `No active buses found for route '${route}'` });
+    }
+
     res.json(buses);
   } catch (error) {
     res.status(500).json({ error: error.message });
