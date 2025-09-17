@@ -12,6 +12,7 @@ exports.getBuses = async (req, res) => {
   }
 };
 
+//display full details of the bus
 exports.getBusById = async (req, res) => {
   try {
     const { busId } = req.params;
@@ -27,6 +28,7 @@ exports.getBusById = async (req, res) => {
   }
 };
 
+//location updated by the driver app
 exports.updateBusLocation = async (req, res) => {
   try {
     console.log("🚌 updateBusLocation route called");  // to confirm route is hit
@@ -63,7 +65,6 @@ exports.updateBusLocation = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 
 function getDistance(lat1, lon1, lat2, lon2) {

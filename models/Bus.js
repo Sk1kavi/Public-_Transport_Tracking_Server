@@ -1,4 +1,3 @@
-// models/Bus.js
 const mongoose = require("mongoose");
 
 const stopSchema = new mongoose.Schema({

@@ -37,18 +37,25 @@ exports.userLogin = async (req, res) => {
       return res.status(400).json({ message: "Invalid password" });
     }
 
-    // Generate JWT token with .env secret
     const token = jwt.sign(
-      { id: user._id, role: "user" },
-      process.env.JWT_SECRET_KEY,   // secure, from .env
+      { id: user._id, role: "user" },  
+      process.env.JWT_SECRET_KEY,
       { expiresIn: "1d" }
     );
 
-    res.status(200).json({ message: "Login successful", token });
+    res.status(200).json({
+      message: "Login successful",
+      token,
+      role: "user",         
+      id: user._id,
+      email: user.mailId
+    });
+
   } catch (error) {
     console.error("User login error:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 
 
