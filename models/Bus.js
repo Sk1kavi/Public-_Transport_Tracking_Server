@@ -1,3 +1,4 @@
+
 const mongoose = require("mongoose");
 
 const stopSchema = new mongoose.Schema({
@@ -7,8 +8,9 @@ const stopSchema = new mongoose.Schema({
 });
 
 const busSchema = new mongoose.Schema({
-  busNumber: { type: String, required: true, unique: true },
-  routeName: { type: String, required: true }, // e.g., "City A - City B"
+  contractor: { type: String, required: true }, // Punjab Roadways / PRTC / Govt Contractor
+  busCode: { type: String, required: true, unique: true }, // e.g., PUNBUS-101, PRTC-205
+  routeName: { type: String, required: true }, // e.g., "Ludhiana - Amritsar"
   source: { type: String, required: true },
   destination: { type: String, required: true },
 
@@ -17,8 +19,8 @@ const busSchema = new mongoose.Schema({
 
   // Dispatch timings for the day
   dispatchTimings: {
-    fromSource: [{ type: String }],       // e.g., ["08:00", "12:00", "16:00"]
-    fromDestination: [{ type: String }]   // e.g., ["10:00", "14:00", "18:00"]
+    fromSource: [{ type: String }],       // e.g., ["04:30", "09:00", "15:00"]
+    fromDestination: [{ type: String }]   // e.g., ["07:15", "11:45", "18:10"]
   },
 
   // Current GPS location of the bus
