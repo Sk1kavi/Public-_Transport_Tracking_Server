@@ -1,6 +1,26 @@
 const Bus = require("../models/Bus");
 const User = require("../models/User");
 
+// Get only bus location coordinates by busId or busCode
+exports.getBusLocation = async (req, res) => {
+  try {
+    const { busId } = req.params;
+
+    const bus = await Bus.findOne({
+      $or: [{ _id: busId }, { busCode: busId }]
+    }).select("location");
+
+    if (!bus) {
+      return res.status(404).json({ error: "Bus not found" });
+    }
+
+    res.json({
+      coordinates: bus.location.coordinates  // [longitude, latitude]
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 // Get buses by source and destination 
 exports.getBuses = async (req, res) => {
   try {

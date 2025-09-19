@@ -15,6 +15,7 @@ app.use("/admin", require("./routes/adminRoutes"));
 app.use("/user", require("./routes/userRoutes"));
 app.use("/bus",require("./routes/busRoutes"));
 app.use("/drivers",require("./routes/driverRoutes"));
+app.use("/notifications", require("./routes/notificationRoutes"));
 
 app.use((req, res) => {
   console.log("❌ Route not found:", req.method, req.originalUrl);
