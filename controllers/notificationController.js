@@ -10,7 +10,7 @@ webpush.setVapidDetails(
   process.env.VAPID_PRIVATE_KEY
 );
 
-// 🔹 Helper: Calculate distance (Haversine formula)
+// Helper: Calculate distance (Haversine formula)
 function getDistance(lat1, lon1, lat2, lon2) {
   const R = 6371; // km
   const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -26,7 +26,7 @@ function getDistance(lat1, lon1, lat2, lon2) {
   return R * c; // in km
 }
 
-// 🔹 Send push notification
+// Send push notification
 async function sendPushNotification(subscription, payload) {
   try {
     await webpush.sendNotification(subscription, JSON.stringify(payload));
@@ -35,7 +35,7 @@ async function sendPushNotification(subscription, payload) {
   }
 }
 
-// 1️⃣ Save push subscription
+//  Save push subscription
 exports.saveSubscription = async (req, res) => {
   try {
     const { userId, subscription } = req.body;
@@ -51,7 +51,7 @@ exports.saveSubscription = async (req, res) => {
   }
 };
 
-// 2️⃣ Add bus notification preference
+//  Add bus notification preference
 exports.addNotification = async (req, res) => {
   try {
     const { userId, busId, stopLocation, type, time } = req.body;
@@ -74,7 +74,7 @@ exports.addNotification = async (req, res) => {
   }
 };
 
-// 3️⃣ Check bus proximity & send notifications
+//  Check bus proximity & send notifications
 async function checkBusProximity(busId) {
   const bus = await Bus.findById(busId);
   if (!bus) return;
@@ -109,7 +109,7 @@ async function checkBusProximity(busId) {
   }
 }
 
-// 4️⃣ Polling function for active buses
+//  Polling function for active buses
 exports.pollBusProximity = async (busId) => {
   const interval = setInterval(async () => {
     const bus = await Bus.findById(busId);
@@ -118,7 +118,7 @@ exports.pollBusProximity = async (busId) => {
   }, 30000); // every 30s
 };
 
-// 5️⃣ Daily notification scheduler (runs every minute)
+//  Daily notification scheduler (runs every minute)
 cron.schedule("* * * * *", async () => {
   const now = new Date();
   const timeStr = now.toTimeString().slice(0, 5); // HH:mm

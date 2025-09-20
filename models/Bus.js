@@ -28,7 +28,12 @@ const busSchema = new mongoose.Schema({
     type: { type: String, enum: ["Point"], default: "Point" },
     coordinates: { type: [Number], default: [0, 0] }, // [longitude, latitude]
   },
-
+ intimations: [
+    {
+      type: { type: String, enum: ["breakdown", "accident"] },
+      timestamp: { type: Date, default: Date.now },
+    },
+  ],
   // Operational flags
   isActive: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now }

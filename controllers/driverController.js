@@ -77,3 +77,50 @@ exports.updateDriverRoute = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+// 📌 inside your notification controller
+
+exports.sendIntimation = async (req, res) => {
+  try {
+    const { busId, type } = req.body; // type = "breakdown" or "accident"
+
+    if (!busId || !type) {
+      return res.status(400).json({ error: "busId and type are required" });
+    }
+
+    const bus = await Bus.findById(busId);
+    if (!bus) return res.status(404).json({ error: "Bus not found" });
+
+    // Save intimation
+    bus.intimations.push({ type, timestamp: new Date() });
+    await bus.save();
+
+    // Find all users who have subscribed to this bus
+    const users = await User.find({
+      "notifications.busId": busId,
+      pushSubscription: { $ne: null },
+    });
+
+    const payload = {
+      title: `🚨 ${type.toUpperCase()} reported`,
+      body: `Bus ${bus.busNumber} (${bus.routeName}) has reported a ${type}.`,
+    };
+
+    // Notify users
+    for (let user of users) {
+      if (user.pushSubscription) {
+        await sendPushNotification(user.pushSubscription, payload);
+      }
+    }
+
+    // Notify admin (you can store admin subscription separately in DB or ENV)
+    if (process.env.ADMIN_SUBSCRIPTION) {
+      await sendPushNotification(JSON.parse(process.env.ADMIN_SUBSCRIPTION), payload);
+    }
+
+    res.json({ message: "Intimation sent successfully ✅" });
+  } catch (err) {
+    console.error("❌ Intimation error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+};

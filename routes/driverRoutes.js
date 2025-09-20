@@ -5,6 +5,7 @@ const {
   loginDriver,
   getDriversByRoute,
   updateDriverRoute,
+  sendIntimation,
 } = require("../controllers/driverController");
 
 // Register driver
@@ -18,5 +19,8 @@ router.get("/route", getDriversByRoute);
 
 // Update driver route
 router.put("/update/:driverId", updateDriverRoute);
+
+// Send intimation (breakdown/accident)
+router.post("/intimation", sendIntimation);
 
 module.exports = router;
